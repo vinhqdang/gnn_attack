@@ -71,13 +71,14 @@ print(f'Final Test Accuracy: {test_acc:.4f}')
 class Nettack:
     def __init__(self, model, adj, features, labels, target_node, device='cpu'):
         self.model = model
-        self.adj = adj.tolil() # Use LIL for efficient structure modifications
+        self.adj = adj.tolil() # Use LIL (List of Lists) format for efficient structure modifications
         self.features = features.copy() # Numpy array
         self.labels = labels
         self.target_node = target_node
         self.device = device
         
         # Surrogate model parameters (Linearized GCN)
+        # W1, W2 are from the trained GCN
         self.W1 = model.conv1.lin.weight.detach().cpu().numpy().T
         self.W2 = model.conv2.lin.weight.detach().cpu().numpy().T
         self.W = self.W1.dot(self.W2)
